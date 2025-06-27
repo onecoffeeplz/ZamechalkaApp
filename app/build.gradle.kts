@@ -70,6 +70,12 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.timber)
     implementation(libs.accompanist.permissions)
+    implementation(libs.koin)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.gson)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -79,4 +85,6 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    ksp(libs.room.compiler)
 }
