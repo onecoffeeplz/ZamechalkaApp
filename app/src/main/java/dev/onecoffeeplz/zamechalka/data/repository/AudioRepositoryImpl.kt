@@ -27,6 +27,7 @@ class AudioRepositoryImpl(
         outputFile = File(dir, fileName)
 
         audioRecord = audioRecordFactory.create()
+            ?: throw IllegalStateException("AudioRecord could not be created")
         audioRecord?.startRecording()
 
         Thread {
@@ -35,7 +36,10 @@ class AudioRepositoryImpl(
     }
 
     override suspend fun stopRecording(): Result<String> = runCatching {
-        WavUtils(audioRecord!!, outputFile!!).addWavHeader()
+        val record = audioRecord ?: throw IllegalStateException("AudioRecord is not initialized")
+        val file = outputFile ?: throw IllegalStateException("Output file was not created")
+
+        WavUtils(record, file).addWavHeader()
 
         audioRecord?.let {
             it.stop()
@@ -43,11 +47,11 @@ class AudioRepositoryImpl(
         }
         audioRecord = null
 
-        outputFile?.absolutePath ?: throw IllegalStateException("Output file was not created")
+        file.absolutePath ?: throw IllegalStateException("Output file was not created")
     }
 
     private fun writeAudioDataToFile() {
-        val bufferSize = audioRecord!!.bufferSizeInFrames
+        val bufferSize = audioRecord?.bufferSizeInFrames ?: return
         val buffer = ByteArray(bufferSize)
         FileOutputStream(outputFile).use { os ->
             while (audioRecord?.recordingState == AudioRecord.RECORDSTATE_RECORDING) {

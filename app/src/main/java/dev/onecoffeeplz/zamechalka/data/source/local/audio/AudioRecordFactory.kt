@@ -8,7 +8,7 @@ import androidx.annotation.RequiresPermission
 
 class AudioRecordFactory {
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
-    fun create(): AudioRecord {
+    fun create(): AudioRecord? {
         val sampleRate = 16000
         val channelConfig = AudioFormat.CHANNEL_IN_MONO
         val audioFormat = AudioFormat.ENCODING_PCM_16BIT

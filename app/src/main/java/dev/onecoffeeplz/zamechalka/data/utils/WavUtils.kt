@@ -46,7 +46,7 @@ class WavUtils(private val audioRecord: AudioRecord, private val outputFile: Fil
         header[39] = 'a'.code.toByte()
         writeInt(header, 40, totalAudioLen.toInt())
 
-        // Записываем заголовок в начало файла
+        // Add header to the beginning of file
         RandomAccessFile(outputFile, "rw").use { raf ->
             raf.seek(0)
             raf.write(header)
