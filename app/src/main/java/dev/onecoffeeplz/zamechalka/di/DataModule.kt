@@ -22,6 +22,7 @@ val dataModule = module {
             "zamechalka_app.db"
         ).build()
     }
+    single { get<AppDatabase>().noteDao() }
 
     single { AudioRecordFactory() }
     singleOf(::AudioRepositoryImpl) { bind<AudioRepository>() }

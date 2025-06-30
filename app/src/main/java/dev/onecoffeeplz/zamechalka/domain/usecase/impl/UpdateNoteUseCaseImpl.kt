@@ -5,7 +5,7 @@ import dev.onecoffeeplz.zamechalka.domain.repository.NoteRepository
 import dev.onecoffeeplz.zamechalka.domain.usecase.UpdateNoteUseCase
 
 class UpdateNoteUseCaseImpl(private val repository: NoteRepository) : UpdateNoteUseCase {
-    override suspend fun invoke(note: Note) {
-        repository.updateNote(note)
+    override suspend fun invoke(note: Note): Result<Unit> {
+        return repository.updateNote(note)
     }
 }

@@ -5,7 +5,7 @@ import dev.onecoffeeplz.zamechalka.domain.repository.NoteRepository
 import dev.onecoffeeplz.zamechalka.domain.usecase.DeleteNoteUseCase
 
 class DeleteNoteUseCaseImpl(private val repository: NoteRepository) : DeleteNoteUseCase {
-    override suspend fun invoke(note: Note) {
-        repository.deleteNote(note)
+    override suspend fun invoke(note: Note): Result<Unit> {
+        return repository.deleteNote(note)
     }
 }

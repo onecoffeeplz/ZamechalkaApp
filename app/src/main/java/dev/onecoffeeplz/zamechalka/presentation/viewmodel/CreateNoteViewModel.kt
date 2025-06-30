@@ -2,6 +2,8 @@ package dev.onecoffeeplz.zamechalka.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.onecoffeeplz.zamechalka.domain.model.Note
+import dev.onecoffeeplz.zamechalka.domain.usecase.CreateNoteUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.StartRecordingUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.StopRecordingUseCase
 import dev.onecoffeeplz.zamechalka.presentation.event.CreateNoteEvent
@@ -16,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class CreateNoteViewModel(
     private val startRecordingUseCase: StartRecordingUseCase,
-    private val stopRecordingUseCase: StopRecordingUseCase
+    private val stopRecordingUseCase: StopRecordingUseCase,
+    private val createNoteUseCase: CreateNoteUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(CreateNoteState())
     val state: StateFlow<CreateNoteState> = _state.asStateFlow()
@@ -28,8 +31,11 @@ class CreateNoteViewModel(
         when (event) {
             is CreateNoteEvent.StartRecording -> startRecording()
             is CreateNoteEvent.StopRecording -> stopRecording()
-            is CreateNoteEvent.SaveRecording -> saveRecording()
-            is CreateNoteEvent.SaveNote -> saveNote()
+            is CreateNoteEvent.SaveRecording -> saveRecording(
+                event.name,
+                event.path,
+                event.duration
+            )
         }
     }
 
@@ -39,9 +45,13 @@ class CreateNoteViewModel(
         updateRecordingTimeProgress()
         _state.update {
             if (result.isSuccess) {
-                it.copy(isRecording = true, recordingFilePath=null, error = null)
+                it.copy(isRecording = true, recordingFilePath = null, error = null)
             } else {
-                it.copy(isRecording = false, recordingFilePath=null, error = result.exceptionOrNull()?.message)
+                it.copy(
+                    isRecording = false,
+                    recordingFilePath = null,
+                    error = result.exceptionOrNull()?.message
+                )
             }
         }
     }
@@ -63,9 +73,24 @@ class CreateNoteViewModel(
         }
     }
 
-    private fun saveRecording() {}
-
-    private fun saveNote() {}
+    private fun saveRecording(name: String, path: String, duration: Long) =
+        viewModelScope.launch {
+            val result = createNoteUseCase(
+                Note(
+                    name = name,
+                    path = path,
+                    duration = duration,
+                    createdAt = System.currentTimeMillis(),
+                )
+            )
+            _state.update {
+                if (result.isSuccess) {
+                    it.copy(recordWasSaved = true)
+                } else {
+                    it.copy(error = result.exceptionOrNull()?.message)
+                }
+            }
+        }
 
     private fun updateRecordingTimeProgress() {
         timerJob?.cancel()

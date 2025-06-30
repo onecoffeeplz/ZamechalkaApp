@@ -5,7 +5,7 @@ import dev.onecoffeeplz.zamechalka.domain.repository.NoteRepository
 import dev.onecoffeeplz.zamechalka.domain.usecase.CreateNoteUseCase
 
 class CreateNoteUseCaseImpl(private val repository: NoteRepository) : CreateNoteUseCase {
-    override suspend fun invoke(note: Note) {
-        repository.createNote(note)
+    override suspend fun invoke(note: Note): Result<Unit> {
+        return repository.createNote(note)
     }
 }
