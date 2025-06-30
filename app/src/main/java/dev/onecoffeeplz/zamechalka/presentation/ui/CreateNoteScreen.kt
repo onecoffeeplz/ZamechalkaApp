@@ -3,6 +3,7 @@ package dev.onecoffeeplz.zamechalka.presentation.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -20,6 +21,8 @@ import com.google.accompanist.permissions.rememberPermissionState
 import dev.onecoffeeplz.zamechalka.presentation.event.CreateNoteEvent
 import dev.onecoffeeplz.zamechalka.presentation.viewmodel.CreateNoteViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -31,13 +34,19 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(64.dp)
+        modifier = Modifier.fillMaxWidth().padding(64.dp)
     ) {
         if (state.isRecording) {
             Button(onClick = { viewModel.onEvent(CreateNoteEvent.StopRecording) }) {
                 Text("Stop")
             }
-            Text("Recording...")
+            Text(
+                "Recording... Duration: ${
+                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(
+                        state.recordingDuration
+                    )
+                }"
+            )
         } else {
             if (audioPermissionState.status.isGranted) {
                 Button(onClick = { viewModel.onEvent(CreateNoteEvent.StartRecording) }) {
@@ -45,7 +54,7 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
                 }
             } else {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Audio recording permission is required")
+                    Text("Audio recording permission is required!", color = Color.Red)
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(onClick = { audioPermissionState.launchPermissionRequest() }) {
                         Text("Grant Permission")
