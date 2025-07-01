@@ -22,11 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import dev.onecoffeeplz.zamechalka.R
 import dev.onecoffeeplz.zamechalka.presentation.event.CreateNoteEvent
 import dev.onecoffeeplz.zamechalka.presentation.ui.components.ShowToast
 import dev.onecoffeeplz.zamechalka.presentation.viewmodel.CreateNoteViewModel
@@ -55,40 +57,41 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
     ) {
         if (state.isRecording) {
             Button(onClick = { viewModel.onEvent(CreateNoteEvent.StopRecording) }) {
-                Text("Stop")
+                Text(stringResource(R.string.stop))
             }
             Text(
-                "Recording... Duration: ${
+                stringResource(
+                    R.string.recording_with_duration,
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(
                         state.recordingDuration
                     )
-                }"
+                )
             )
         } else {
             if (audioPermissionState.status.isGranted) {
                 Button(onClick = { viewModel.onEvent(CreateNoteEvent.StartRecording) }) {
-                    Text("Start Recording")
+                    Text(stringResource(R.string.start_recording))
                 }
             } else {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Audio recording permission is required!", color = Color.Red)
+                    Text(stringResource(R.string.audio_recording_permission_is_required), color = Color.Red)
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(onClick = { audioPermissionState.launchPermissionRequest() }) {
-                        Text("Grant Permission")
+                        Text(stringResource(R.string.grant_permission))
                     }
                 }
             }
         }
 
         state.recordingFilePath?.let {
-            Text("Recorded file: $it")
+            Text(stringResource(R.string.recorded_file, it))
 
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedTextField(
                 value = noteName,
                 onValueChange = { noteName = it },
-                label = { Text("Enter note name...") },
+                label = { Text(stringResource(R.string.enter_note_name)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -113,16 +116,16 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
                     )
                 )
             }) {
-                Text("Save Note")
+                Text(stringResource(R.string.save_note))
             }
         }
 
         if (state.recordWasSaved) {
-            ShowToast("Note was saved in DB!")
+            ShowToast(stringResource(R.string.note_was_saved_in_db))
         }
 
         state.error?.let {
-            Text("Error: $it", color = Color.Red)
+            Text(stringResource(R.string.error, it), color = Color.Red)
         }
     }
 }

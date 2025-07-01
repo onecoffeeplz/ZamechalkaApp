@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">Zamechalka</string>
+    <string name="app_name" translatable="false">Zamechalka</string>
+    <string name="start_recording">Start Recording</string>
+    <string name="stop">Stop</string>
+    <string name="enter_note_name">Enter note name...</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="audio_recording_permission_is_required">Audio recording permission is required!</string>
+    <string name="note_was_saved_in_db">Note was saved in DB!</string>
+    <string name="save_note">Save Note</string>
+    <string name="recording_with_duration">Recording... Duration: %1$s</string>
+    <string name="recorded_file">Recorded file: %1$s</string>
+    <string name="error">Error: %1$s</string>
 </resources>
