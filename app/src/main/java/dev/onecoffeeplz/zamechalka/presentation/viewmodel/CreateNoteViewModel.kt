@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.onecoffeeplz.zamechalka.domain.model.Note
 import dev.onecoffeeplz.zamechalka.domain.usecase.CreateNoteUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.DeleteRecordingUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.StartRecordingUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.StopRecordingUseCase
 import dev.onecoffeeplz.zamechalka.presentation.event.CreateNoteEvent
@@ -20,6 +21,7 @@ class CreateNoteViewModel(
     private val startRecordingUseCase: StartRecordingUseCase,
     private val stopRecordingUseCase: StopRecordingUseCase,
     private val createNoteUseCase: CreateNoteUseCase,
+    private val deleteRecordingUseCase: DeleteRecordingUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(CreateNoteState())
     val state: StateFlow<CreateNoteState> = _state.asStateFlow()
@@ -37,6 +39,7 @@ class CreateNoteViewModel(
                 event.path,
                 event.duration
             )
+            is CreateNoteEvent.DeleteRecording -> deleteRecording(event.path)
         }
     }
 
@@ -96,6 +99,17 @@ class CreateNoteViewModel(
                 }
             }
         }
+
+    private fun deleteRecording(path: String) = viewModelScope.launch {
+        val result = deleteRecordingUseCase(path)
+        _state.update {
+            if (result.isSuccess) {
+                it.copy(audioWasDeleted=true)
+            } else {
+                it.copy(error = result.exceptionOrNull()?.message)
+            }
+        }
+    }
 
     private fun updateRecordingTimeProgress() {
         timerJob?.cancel()

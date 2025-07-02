@@ -2,6 +2,7 @@ package dev.onecoffeeplz.zamechalka.di
 
 import dev.onecoffeeplz.zamechalka.domain.usecase.CreateNoteUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.DeleteNoteUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.DeleteRecordingUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.GetNoteByIdUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.GetNotesUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.StartRecordingUseCase
@@ -9,6 +10,7 @@ import dev.onecoffeeplz.zamechalka.domain.usecase.StopRecordingUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.UpdateNoteUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.impl.CreateNoteUseCaseImpl
 import dev.onecoffeeplz.zamechalka.domain.usecase.impl.DeleteNoteUseCaseImpl
+import dev.onecoffeeplz.zamechalka.domain.usecase.impl.DeleteRecordingUseCaseImpl
 import dev.onecoffeeplz.zamechalka.domain.usecase.impl.GetNoteByIdUseCaseImpl
 import dev.onecoffeeplz.zamechalka.domain.usecase.impl.GetNotesUseCaseImpl
 import dev.onecoffeeplz.zamechalka.domain.usecase.impl.StartRecordingUseCaseImpl
@@ -26,4 +28,5 @@ val domainModule = module {
     factoryOf(::UpdateNoteUseCaseImpl) { bind<UpdateNoteUseCase>() }
     factoryOf(::StartRecordingUseCaseImpl) { bind<StartRecordingUseCase>() }
     factoryOf(::StopRecordingUseCaseImpl) { bind<StopRecordingUseCase>() }
+    factoryOf(::DeleteRecordingUseCaseImpl) { bind<DeleteRecordingUseCase>() }
 }

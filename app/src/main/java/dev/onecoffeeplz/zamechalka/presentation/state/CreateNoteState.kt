@@ -6,4 +6,5 @@ data class CreateNoteState(
     val recordingFilePath: String? = null,
     val error: String? = null,
     val recordWasSaved: Boolean = false,
+    val audioWasDeleted: Boolean = false,
 )

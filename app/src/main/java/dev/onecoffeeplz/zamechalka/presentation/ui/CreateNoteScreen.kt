@@ -1,14 +1,19 @@
 package dev.onecoffeeplz.zamechalka.presentation.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -74,7 +79,10 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
                 }
             } else {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(stringResource(R.string.audio_recording_permission_is_required), color = Color.Red)
+                    Text(
+                        stringResource(R.string.audio_recording_permission_is_required),
+                        color = Color.Red
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(onClick = { audioPermissionState.launchPermissionRequest() }) {
                         Text(stringResource(R.string.grant_permission))
@@ -105,23 +113,51 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(onClick = {
-                keyboardController?.hide()
-                focusManager.clearFocus()
-                viewModel.onEvent(
-                    CreateNoteEvent.SaveRecording(
-                        noteName,
-                        state.recordingFilePath!!,
-                        state.recordingDuration,
-                    )
-                )
-            }) {
-                Text(stringResource(R.string.save_note))
+            Row {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        viewModel.onEvent(
+                            CreateNoteEvent.SaveRecording(
+                                noteName,
+                                state.recordingFilePath!!,
+                                state.recordingDuration,
+                            )
+                        )
+                    }) {
+                    Text(stringResource(R.string.save_note))
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Button(
+                    modifier = Modifier
+                        .weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
+                    onClick = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        viewModel.onEvent(
+                            CreateNoteEvent.DeleteRecording(state.recordingFilePath!!)
+                        )
+                    }) {
+                    Text(stringResource(R.string.cancel))
+                }
             }
         }
 
         if (state.recordWasSaved) {
             ShowToast(stringResource(R.string.note_was_saved_in_db))
+            viewModel.onEvent(CreateNoteEvent.Idle)
+        }
+
+        if (state.audioWasDeleted) {
+            ShowToast(stringResource(R.string.audio_was_deleted))
             viewModel.onEvent(CreateNoteEvent.Idle)
         }
 

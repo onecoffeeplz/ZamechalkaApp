@@ -50,6 +50,11 @@ class AudioRepositoryImpl(
         file.absolutePath ?: throw IllegalStateException("Output file was not created")
     }
 
+    override suspend fun deleteRecording(path: String): Result<Unit> = runCatching {
+        val filePath = File(path)
+        filePath.delete()
+    }
+
     private fun writeAudioDataToFile() {
         val bufferSize = audioRecord?.bufferSizeInFrames ?: return
         val buffer = ByteArray(bufferSize)
