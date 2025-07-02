@@ -29,6 +29,7 @@ class CreateNoteViewModel(
 
     fun onEvent(event: CreateNoteEvent) {
         when (event) {
+            is CreateNoteEvent.Idle -> initialScreenState()
             is CreateNoteEvent.StartRecording -> startRecording()
             is CreateNoteEvent.StopRecording -> stopRecording()
             is CreateNoteEvent.SaveRecording -> saveRecording(
@@ -37,6 +38,10 @@ class CreateNoteViewModel(
                 event.duration
             )
         }
+    }
+
+    private fun initialScreenState() = viewModelScope.launch {
+        _state.update { it.copy(isRecording = false, recordingFilePath = null, error = null) }
     }
 
     private fun startRecording() = viewModelScope.launch {
@@ -109,6 +114,6 @@ class CreateNoteViewModel(
     }
 
     companion object {
-        private const val DURATION_UPDATE_TIME = 1000L
+        private const val DURATION_UPDATE_TIME = 1_000L
     }
 }

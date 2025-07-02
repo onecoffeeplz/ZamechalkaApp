@@ -122,6 +122,7 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
 
         if (state.recordWasSaved) {
             ShowToast(stringResource(R.string.note_was_saved_in_db))
+            viewModel.onEvent(CreateNoteEvent.Idle)
         }
 
         state.error?.let {
