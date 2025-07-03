@@ -12,4 +12,8 @@
     <string name="recording_with_duration">Recording… Duration: %1$s</string>
     <string name="recorded_file">Recorded file: %1$s</string>
     <string name="error">Error: %1$s</string>
+    <string name="notes_list">Notes List</string>
+    <string name="note_details">Note Details</string>
+    <string name="create_note">Create Note</string>
+    <string name="settings">Settings</string>
 </resources>
