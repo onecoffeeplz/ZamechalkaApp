@@ -16,4 +16,5 @@
     <string name="note_details">Детали заметки</string>
     <string name="create_note">Новая заметка</string>
     <string name="settings">Настройки</string>
+    <string name="no_notes_found">Заметок нет</string>
 </resources>

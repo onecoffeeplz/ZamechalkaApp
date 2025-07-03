@@ -73,7 +73,10 @@ fun MainScreen() {
                         Modifier
                             .padding(innerPadding)
                     ) {
-                        NotesListScreen(topLevelBackStack)
+                        NotesListScreen(
+                            currentRoute = topLevelBackStack.topLevelKey,
+                            onNoteClick = { note -> topLevelBackStack.add(TopLevelRoute.NoteDetails) }
+                        )
                     }
                 }
                 entry<TopLevelRoute.NoteDetails> {
