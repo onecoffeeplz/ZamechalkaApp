@@ -39,12 +39,21 @@ class CreateNoteViewModel(
                 event.path,
                 event.duration
             )
+
             is CreateNoteEvent.DeleteRecording -> deleteRecording(event.path)
         }
     }
 
     private fun initialScreenState() = viewModelScope.launch {
-        _state.update { it.copy(isRecording = false, recordingFilePath = null, error = null) }
+        _state.update {
+            it.copy(
+                isRecording = false,
+                recordingFilePath = null,
+                error = null,
+                recordWasSaved = false,
+                audioWasDeleted = false
+            )
+        }
     }
 
     private fun startRecording() = viewModelScope.launch {
@@ -104,7 +113,7 @@ class CreateNoteViewModel(
         val result = deleteRecordingUseCase(path)
         _state.update {
             if (result.isSuccess) {
-                it.copy(audioWasDeleted=true)
+                it.copy(audioWasDeleted = true)
             } else {
                 it.copy(error = result.exceptionOrNull()?.message)
             }
