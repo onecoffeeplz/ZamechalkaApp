@@ -12,4 +12,8 @@
     <string name="recording_with_duration">Идет запись… Продолжительность: %1$s</string>
     <string name="recorded_file">Файл записан: %1$s</string>
     <string name="error">Ошибка: %1$s</string>
+    <string name="notes_list">Заметки</string>
+    <string name="note_details">Детали заметки</string>
+    <string name="create_note">Новая заметка</string>
+    <string name="settings">Настройки</string>
 </resources>
