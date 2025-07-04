@@ -10,6 +10,8 @@
     <string name="audio_was_deleted">Audio file was deleted!</string>
     <string name="save_note">Save Note</string>
     <string name="recording_with_duration">Recording… Duration: %1$s</string>
+    <string name="duration">Duration: %1$s</string>
+    <string name="created">Created: %1$s</string>
     <string name="recorded_file">Recorded file: %1$s</string>
     <string name="error">Error: %1$s</string>
     <string name="notes_list">Notes List</string>

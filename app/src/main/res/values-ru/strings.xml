@@ -10,6 +10,8 @@
     <string name="audio_was_deleted">Аудиофайл удален!</string>
     <string name="save_note">Сохранить заметку</string>
     <string name="recording_with_duration">Идет запись… Продолжительность: %1$s</string>
+    <string name="duration">Длительность: %1$s</string>
+    <string name="created">Дата создания: %1$s</string>
     <string name="recorded_file">Файл записан: %1$s</string>
     <string name="error">Ошибка: %1$s</string>
     <string name="notes_list">Заметки</string>

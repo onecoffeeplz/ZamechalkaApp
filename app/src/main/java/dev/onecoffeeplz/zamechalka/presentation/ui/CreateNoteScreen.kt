@@ -34,6 +34,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import dev.onecoffeeplz.zamechalka.R
 import dev.onecoffeeplz.zamechalka.presentation.event.CreateNoteEvent
+import dev.onecoffeeplz.zamechalka.presentation.ui.components.ErrorView
 import dev.onecoffeeplz.zamechalka.presentation.ui.components.ShowToast
 import dev.onecoffeeplz.zamechalka.presentation.viewmodel.CreateNoteViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -161,7 +162,7 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
         }
 
         state.error?.let {
-            Text(stringResource(R.string.error, it), color = Color.Red)
+            ErrorView(message = it)
         }
     }
 }

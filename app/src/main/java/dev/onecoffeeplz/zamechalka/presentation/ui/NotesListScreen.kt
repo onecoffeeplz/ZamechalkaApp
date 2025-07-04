@@ -40,10 +40,8 @@ fun NotesListScreen(
             EmptyView()
         }
 
-        state.error != null -> {
-            ErrorView(
-                message = state.error!!
-            )
+        state.error != null -> state.error?.let {
+            ErrorView(message = it)
         }
 
         else -> {
