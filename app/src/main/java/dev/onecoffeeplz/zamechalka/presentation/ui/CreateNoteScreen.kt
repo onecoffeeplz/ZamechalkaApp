@@ -23,11 +23,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -64,13 +64,18 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
             Button(onClick = { viewModel.onEvent(CreateNoteEvent.StopRecording) }) {
                 Text(stringResource(R.string.stop))
             }
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 stringResource(
                     R.string.recording_with_duration,
                     SimpleDateFormat("mm:ss", Locale.getDefault()).format(
                         state.recordingDuration
                     )
-                )
+                ),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
             )
         } else {
             if (audioPermissionState.status.isGranted) {
@@ -78,12 +83,17 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
                     Text(stringResource(R.string.start_recording))
                 }
             } else {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
                     Text(
                         stringResource(R.string.audio_recording_permission_is_required),
-                        color = Color.Red
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = { audioPermissionState.launchPermissionRequest() }) {
                         Text(stringResource(R.string.grant_permission))
                     }
@@ -92,9 +102,15 @@ fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
         }
 
         state.recordingFilePath?.let {
-            Text(stringResource(R.string.recorded_file, it))
+            Text(
+                stringResource(R.string.recorded_file, it),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = noteName,
