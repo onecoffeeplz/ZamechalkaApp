@@ -2,6 +2,7 @@ package dev.onecoffeeplz.zamechalka.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.onecoffeeplz.zamechalka.domain.model.Note
 import dev.onecoffeeplz.zamechalka.domain.usecase.GetNotesUseCase
 import dev.onecoffeeplz.zamechalka.presentation.event.NotesListEvent
 import dev.onecoffeeplz.zamechalka.presentation.state.NotesListState
@@ -23,6 +24,7 @@ class NotesListViewModel(
     fun onEvent(event: NotesListEvent) {
         when (event) {
             is NotesListEvent.LoadData -> getNotes()
+            is NotesListEvent.DeleteNote -> deleteNote(event.note)
         }
     }
 
@@ -77,5 +79,9 @@ class NotesListViewModel(
                     }
                 }
             }
+    }
+
+    private fun deleteNote(note: Note) {
+        Timber.d("run event for note deletion: $note")
     }
 }

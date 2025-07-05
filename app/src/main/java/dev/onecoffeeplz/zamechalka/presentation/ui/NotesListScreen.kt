@@ -46,7 +46,10 @@ fun NotesListScreen(
 
         else -> {
             Timber.d("NotesListScreen get notes: ${state.notes}")
-            NotesListView(notes = state.notes, onNoteClick = onNoteClick)
+            NotesListView(
+                notes = state.notes,
+                onNoteClick = onNoteClick,
+                onSwipeToDelete = { viewModel.onEvent(NotesListEvent.DeleteNote(it)) })
         }
     }
 }

@@ -7,10 +7,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import dev.onecoffeeplz.zamechalka.domain.model.Note
 
 @Composable
-fun NotesListView(notes: List<Note>, onNoteClick: (Note) -> Unit) {
+fun NotesListView(notes: List<Note>, onNoteClick: (Note) -> Unit, onSwipeToDelete: (Note) -> Unit) {
     LazyColumn {
-        items(notes) { note ->
-            NoteItem(note = note, onClick = { onNoteClick(note) })
+        items(notes, key = { it.id!! }) { note ->
+            NoteItem(
+                note = note,
+                onClick = { onNoteClick(note) },
+                onDelete = { onSwipeToDelete(note) })
         }
     }
 }
@@ -38,5 +41,5 @@ fun NotesListViewPreview() {
             createdAt = 1751140132674,
         )
     )
-    NotesListView(previewNotes, {})
+    NotesListView(previewNotes, {}, {})
 }
