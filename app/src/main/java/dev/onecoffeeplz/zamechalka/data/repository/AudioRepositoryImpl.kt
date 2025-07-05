@@ -7,8 +7,14 @@ import androidx.annotation.RequiresPermission
 import dev.onecoffeeplz.zamechalka.data.source.local.audio.AudioRecordFactory
 import dev.onecoffeeplz.zamechalka.data.utils.WavUtils
 import dev.onecoffeeplz.zamechalka.domain.repository.AudioRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileOutputStream
+import kotlin.coroutines.coroutineContext
 
 class AudioRepositoryImpl(
     private val audioRecordFactory: AudioRecordFactory,
@@ -16,9 +22,10 @@ class AudioRepositoryImpl(
 ) : AudioRepository {
     private var audioRecord: AudioRecord? = null
     private var outputFile: File? = null
+    private var recordingJob: Job? = null
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
-    override suspend fun startRecording(): Result<Unit> = runCatching {
+    override suspend fun startRecording(scope: CoroutineScope): Result<Unit> = runCatching {
         val fileName = "recording_${System.currentTimeMillis()}.wav"
         val dir = File(context.filesDir, "audio")
         if (!dir.exists()) {
@@ -30,9 +37,9 @@ class AudioRepositoryImpl(
             ?: throw IllegalStateException("AudioRecord could not be created")
         audioRecord?.startRecording()
 
-        Thread {
+        recordingJob = scope.launch(Dispatchers.IO) {
             writeAudioDataToFile()
-        }.start()
+        }
     }
 
     override suspend fun stopRecording(): Result<String> = runCatching {
@@ -47,6 +54,9 @@ class AudioRepositoryImpl(
         }
         audioRecord = null
 
+        recordingJob?.cancelAndJoin()
+        recordingJob = null
+
         file.absolutePath ?: throw IllegalStateException("Output file was not created")
     }
 
@@ -55,14 +65,21 @@ class AudioRepositoryImpl(
         filePath.delete()
     }
 
-    private fun writeAudioDataToFile() {
-        val bufferSize = audioRecord?.bufferSizeInFrames ?: return
-        val buffer = ByteArray(bufferSize)
-        FileOutputStream(outputFile).use { os ->
-            while (audioRecord?.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
-                val read = audioRecord?.read(buffer, 0, buffer.size) ?: 0
+    private suspend fun writeAudioDataToFile() {
+        val record = audioRecord ?: return
+        val minBufferSize = AudioRecord.getMinBufferSize(
+            record.sampleRate,
+            record.channelConfiguration,
+            record.audioFormat
+        )
+        val buffer = ByteArray(minBufferSize)
+
+        outputFile?.outputStream().use { os ->
+            while (record.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
+                coroutineContext.ensureActive()
+                val read = record.read(buffer, 0, buffer.size)
                 if (read > 0) {
-                    os.write(buffer, 0, read)
+                    os?.write(buffer, 0, read)
                 }
             }
         }

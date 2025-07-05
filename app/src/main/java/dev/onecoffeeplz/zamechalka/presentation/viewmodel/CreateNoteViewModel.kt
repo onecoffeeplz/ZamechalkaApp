@@ -57,7 +57,7 @@ class CreateNoteViewModel(
     }
 
     private fun startRecording() = viewModelScope.launch {
-        val result = startRecordingUseCase()
+        val result = startRecordingUseCase(viewModelScope)
         recordingStartTime = System.currentTimeMillis()
         updateRecordingTimeProgress()
         _state.update {
