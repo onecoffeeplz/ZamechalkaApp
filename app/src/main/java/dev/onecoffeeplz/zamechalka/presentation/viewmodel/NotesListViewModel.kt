@@ -3,6 +3,8 @@ package dev.onecoffeeplz.zamechalka.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.onecoffeeplz.zamechalka.domain.model.Note
+import dev.onecoffeeplz.zamechalka.domain.usecase.DeleteNoteUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.DeleteRecordingUseCase
 import dev.onecoffeeplz.zamechalka.domain.usecase.GetNotesUseCase
 import dev.onecoffeeplz.zamechalka.presentation.event.NotesListEvent
 import dev.onecoffeeplz.zamechalka.presentation.state.NotesListState
@@ -17,6 +19,8 @@ import timber.log.Timber
 
 class NotesListViewModel(
     private val getNotesUseCase: GetNotesUseCase,
+    private val deleteRecordingUseCase: DeleteRecordingUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(NotesListState())
     val state: StateFlow<NotesListState> = _state.asStateFlow()
@@ -81,7 +85,33 @@ class NotesListViewModel(
             }
     }
 
-    private fun deleteNote(note: Note) {
-        Timber.d("run event for note deletion: $note")
+    private fun deleteNote(note: Note) = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isLoading = true,
+                notes = emptyList(),
+                error = null,
+                isEmpty = false,
+            )
+        }
+        val resultOfDeletingRecording = deleteRecordingUseCase(note.path)
+        val resultOfDeletingNote = deleteNoteUseCase(note)
+        if (resultOfDeletingRecording.isSuccess && resultOfDeletingNote.isSuccess) {
+            getNotes()
+        } else {
+            val errorMessage = if (resultOfDeletingRecording.isFailure) {
+                resultOfDeletingRecording.exceptionOrNull()?.message
+            } else {
+                resultOfDeletingNote.exceptionOrNull()?.message
+            }
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    notes = emptyList(),
+                    error = errorMessage,
+                    isEmpty = true,
+                )
+            }
+        }
     }
 }
