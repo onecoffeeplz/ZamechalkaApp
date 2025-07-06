@@ -75,16 +75,22 @@ fun MainScreen() {
                     ) {
                         NotesListScreen(
                             currentRoute = topLevelBackStack.topLevelKey,
-                            onNoteClick = { note -> topLevelBackStack.add(TopLevelRoute.NoteDetails) }
+                            onNoteClick = { note ->
+                                topLevelBackStack.add(
+                                    TopLevelRoute.NoteDetails(
+                                        note
+                                    )
+                                )
+                            }
                         )
                     }
                 }
-                entry<TopLevelRoute.NoteDetails> {
+                entry<TopLevelRoute.NoteDetails> { navEntry ->
                     Column(
                         Modifier
                             .padding(innerPadding)
                     ) {
-                        NoteDetailsScreen()
+                        NoteDetailsScreen(navEntry.note)
                     }
                 }
                 entry<TopLevelRoute.CreateNote> {
