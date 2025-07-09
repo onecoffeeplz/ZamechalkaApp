@@ -11,12 +11,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,12 +28,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.onecoffeeplz.zamechalka.R
 import dev.onecoffeeplz.zamechalka.domain.model.Note
+import dev.onecoffeeplz.zamechalka.presentation.event.AudioPlayerEvent
+import dev.onecoffeeplz.zamechalka.presentation.ui.components.ErrorView
+import dev.onecoffeeplz.zamechalka.presentation.viewmodel.NoteDetailsViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NoteDetailsScreen(note: Note) {
+fun NoteDetailsScreen(note: Note,
+                      viewModel: NoteDetailsViewModel = koinViewModel(parameters = {
+                          parametersOf(note.path)
+                      })
+) {
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            viewModel.handleEffect(effect)
+        }
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -69,19 +90,30 @@ fun NoteDetailsScreen(note: Note) {
         }
 
         Spacer(Modifier.height(16.dp))
-        IconButton(onClick = {}) {
-            Icon(Icons.Default.PlayArrow, contentDescription = "Play", Modifier.size(512.dp))
+        if (state.isPlaying) {
+            IconButton(onClick = { viewModel.onEvent(AudioPlayerEvent.StopClicked) }) {
+                Icon(Icons.Filled.Close, contentDescription = "Stop", Modifier.size(64.dp))
+            }
+        } else {
+            IconButton(onClick = { viewModel.onEvent(AudioPlayerEvent.PlayClicked) })
+            {
+                Icon(Icons.Default.PlayArrow, contentDescription = "Play", Modifier.size(512.dp))
+            }
         }
         Text(
             text = stringResource(
                 R.string.duration,
                 SimpleDateFormat("mm:ss", Locale.getDefault()).format(
-                    note.duration
+                    state.currentPosition
                 )
             ),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.labelMedium,
         )
+    }
+
+    state.error?.let {
+        ErrorView(message = it)
     }
 }
 
