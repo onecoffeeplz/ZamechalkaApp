@@ -1,4 +1,4 @@
-package dev.onecoffeeplz.zamechalka.domain.usecase
+package dev.onecoffeeplz.zamechalka.domain.usecase.recording
 
 import kotlinx.coroutines.CoroutineScope
 

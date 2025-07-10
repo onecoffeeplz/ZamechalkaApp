@@ -2,11 +2,11 @@ package dev.onecoffeeplz.zamechalka.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.onecoffeeplz.zamechalka.domain.usecase.GetAudioPlaybackPositionUseCase
-import dev.onecoffeeplz.zamechalka.domain.usecase.PauseAudioPlayerUseCase
-import dev.onecoffeeplz.zamechalka.domain.usecase.PrepareAudioPlayerUseCase
-import dev.onecoffeeplz.zamechalka.domain.usecase.ReleaseAudioPlayerUseCase
-import dev.onecoffeeplz.zamechalka.domain.usecase.StartAudioPlayerUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.playback.GetAudioPlaybackPositionUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.playback.PauseAudioPlayerUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.playback.PrepareAudioPlayerUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.playback.ReleaseAudioPlayerUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.playback.StartAudioPlayerUseCase
 import dev.onecoffeeplz.zamechalka.presentation.effect.AudioPlayerEffect
 import dev.onecoffeeplz.zamechalka.presentation.effect.AudioPlayerEffect.*
 import dev.onecoffeeplz.zamechalka.presentation.event.AudioPlayerEvent

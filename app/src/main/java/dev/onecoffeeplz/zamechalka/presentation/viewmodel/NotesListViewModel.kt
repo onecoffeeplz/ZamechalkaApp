@@ -3,9 +3,9 @@ package dev.onecoffeeplz.zamechalka.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.onecoffeeplz.zamechalka.domain.model.Note
-import dev.onecoffeeplz.zamechalka.domain.usecase.DeleteNoteUseCase
-import dev.onecoffeeplz.zamechalka.domain.usecase.DeleteRecordingUseCase
-import dev.onecoffeeplz.zamechalka.domain.usecase.GetNotesUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.view.DeleteNoteUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.recording.DeleteRecordingUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.view.GetNotesUseCase
 import dev.onecoffeeplz.zamechalka.presentation.event.NotesListEvent
 import dev.onecoffeeplz.zamechalka.presentation.state.NotesListState
 import kotlinx.coroutines.flow.MutableStateFlow

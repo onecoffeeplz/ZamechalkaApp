@@ -1,7 +1,7 @@
-package dev.onecoffeeplz.zamechalka.domain.usecase
+package dev.onecoffeeplz.zamechalka.domain.usecase.view
 
 import dev.onecoffeeplz.zamechalka.domain.model.Note
 
-interface CreateNoteUseCase {
+interface DeleteNoteUseCase {
     suspend operator fun invoke(note: Note): Result<Unit>
 }

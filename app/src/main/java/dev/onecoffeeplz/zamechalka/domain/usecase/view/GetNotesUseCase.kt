@@ -1,4 +1,4 @@
-package dev.onecoffeeplz.zamechalka.domain.usecase
+package dev.onecoffeeplz.zamechalka.domain.usecase.view
 
 import dev.onecoffeeplz.zamechalka.domain.model.Note
 import kotlinx.coroutines.flow.Flow

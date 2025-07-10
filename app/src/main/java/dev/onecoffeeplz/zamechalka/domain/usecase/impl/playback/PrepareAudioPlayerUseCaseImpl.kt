@@ -1,7 +1,7 @@
-package dev.onecoffeeplz.zamechalka.domain.usecase.impl
+package dev.onecoffeeplz.zamechalka.domain.usecase.impl.playback
 
 import dev.onecoffeeplz.zamechalka.domain.repository.AudioPlayerRepository
-import dev.onecoffeeplz.zamechalka.domain.usecase.PrepareAudioPlayerUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.playback.PrepareAudioPlayerUseCase
 
 class PrepareAudioPlayerUseCaseImpl(private val audioPlayerRepository: AudioPlayerRepository): PrepareAudioPlayerUseCase {
     override fun invoke(

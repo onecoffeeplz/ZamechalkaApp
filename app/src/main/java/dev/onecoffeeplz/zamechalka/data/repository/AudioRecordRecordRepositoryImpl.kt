@@ -6,7 +6,7 @@ import android.media.AudioRecord
 import androidx.annotation.RequiresPermission
 import dev.onecoffeeplz.zamechalka.data.source.local.audio.AudioRecordFactory
 import dev.onecoffeeplz.zamechalka.data.utils.WavUtils
-import dev.onecoffeeplz.zamechalka.domain.repository.AudioRepository
+import dev.onecoffeeplz.zamechalka.domain.repository.AudioRecordRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,10 +16,10 @@ import kotlinx.coroutines.launch
 import java.io.File
 import kotlin.coroutines.coroutineContext
 
-class AudioRepositoryImpl(
+class AudioRecordRecordRepositoryImpl(
     private val audioRecordFactory: AudioRecordFactory,
     private val context: Context,
-) : AudioRepository {
+) : AudioRecordRepository {
     private var audioRecord: AudioRecord? = null
     private var outputFile: File? = null
     private var recordingJob: Job? = null

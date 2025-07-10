@@ -3,10 +3,10 @@ package dev.onecoffeeplz.zamechalka.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.onecoffeeplz.zamechalka.domain.model.Note
-import dev.onecoffeeplz.zamechalka.domain.usecase.CreateNoteUseCase
-import dev.onecoffeeplz.zamechalka.domain.usecase.DeleteRecordingUseCase
-import dev.onecoffeeplz.zamechalka.domain.usecase.StartRecordingUseCase
-import dev.onecoffeeplz.zamechalka.domain.usecase.StopRecordingUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.view.CreateNoteUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.recording.DeleteRecordingUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.recording.StartRecordingUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.recording.StopRecordingUseCase
 import dev.onecoffeeplz.zamechalka.presentation.event.CreateNoteEvent
 import dev.onecoffeeplz.zamechalka.presentation.state.CreateNoteState
 import kotlinx.coroutines.Job

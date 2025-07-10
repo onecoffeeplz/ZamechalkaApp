@@ -1,7 +1,7 @@
-package dev.onecoffeeplz.zamechalka.domain.usecase.impl
+package dev.onecoffeeplz.zamechalka.domain.usecase.impl.playback
 
 import dev.onecoffeeplz.zamechalka.domain.repository.AudioPlayerRepository
-import dev.onecoffeeplz.zamechalka.domain.usecase.GetAudioPlaybackPositionUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.playback.GetAudioPlaybackPositionUseCase
 
 class GetAudioPlaybackPositionUseCaseImpl(private val audioPlayerRepository: AudioPlayerRepository) :
     GetAudioPlaybackPositionUseCase {
