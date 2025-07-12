@@ -43,20 +43,33 @@ class NoteDetailsViewModel(
         when (event) {
             is PlayClicked -> {
                 if (!_state.value.isPlaying) {
-                    viewModelScope.launch { _effects.emit(PreparePlayer(_state.value.filePath)) }
+                    if (!_state.value.isPrepared) {
+                        viewModelScope.launch { _effects.emit(PreparePlayer(_state.value.filePath)) }
+                    } else {
+                        viewModelScope.launch { _effects.emit(PlayAudio) }
+                        _state.update { it.copy(isPlaying = true) }
+                        updateListenProgress()
+                    }
+
                 }
             }
 
-            is StopClicked -> {
+            is PauseClicked -> {
                 if (_state.value.isPlaying) {
-                    _state.update { it.copy(isPlaying = false, currentPosition = 0L, error = null) }
-                    viewModelScope.launch { _effects.emit(StopAudio) }
+                    _state.update { it.copy(isPlaying = false, error = null) }
+                    viewModelScope.launch { _effects.emit(PauseAudio) }
                     cancelUpdateListenProgress()
                 }
             }
 
             is PlaybackError -> {
-                _state.update { it.copy(isPlaying = false, error = event.message) }
+                _state.update {
+                    it.copy(
+                        isPrepared = false,
+                        isPlaying = false,
+                        error = event.message
+                    )
+                }
                 cancelUpdateListenProgress()
             }
 
@@ -66,13 +79,28 @@ class NoteDetailsViewModel(
             }
 
             is Prepared -> {
-                _state.update { it.copy(isPlaying = true) }
+                _state.update { it.copy(isPrepared = true, isPlaying = true) }
                 viewModelScope.launch { _effects.emit(PlayAudio) }
                 updateListenProgress()
             }
 
             is PositionUpdated -> {
                 _state.update { it.copy(currentPosition = event.position) }
+            }
+
+            StopAndRelease -> {
+                _state.update {
+                    it.copy(
+                        isPlaying = false,
+                        isPrepared = false,
+                        currentPosition = 0L,
+                        error = null,
+                    )
+                }
+                cancelUpdateListenProgress()
+                viewModelScope.launch {
+                    _effects.emit(ReleasePlayer)
+                }
             }
         }
     }
@@ -108,8 +136,13 @@ class NoteDetailsViewModel(
                 }
             }
 
-            is StopAudio -> {
+            PauseAudio -> {
                 pauseAudioPlayerUseCase()
+            }
+
+            ReleasePlayer -> {
+                pauseAudioPlayerUseCase()
+                releaseAudioPlayerUseCase()
             }
         }
     }
@@ -118,6 +151,13 @@ class NoteDetailsViewModel(
         super.onCleared()
         cancelUpdateListenProgress()
         releaseAudioPlayerUseCase()
+        _state.update {
+            it.copy(
+                isPrepared = false,
+                isPlaying = false,
+                currentPosition = 0L,
+            )
+        }
     }
 
     private fun updateListenProgress() {

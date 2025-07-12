@@ -11,13 +11,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,7 +40,7 @@ import java.util.Locale
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun NoteDetailsScreen(note: Note,
-                      viewModel: NoteDetailsViewModel = koinViewModel(parameters = {
+                      viewModel: NoteDetailsViewModel = koinViewModel(key = note.path, parameters = {
                           parametersOf(note.path)
                       })
 ) {
@@ -48,6 +49,12 @@ fun NoteDetailsScreen(note: Note,
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             viewModel.handleEffect(effect)
+        }
+    }
+
+    DisposableEffect(note.path) {
+        onDispose {
+            viewModel.onEvent(AudioPlayerEvent.StopAndRelease)
         }
     }
 
@@ -91,13 +98,13 @@ fun NoteDetailsScreen(note: Note,
 
         Spacer(Modifier.height(16.dp))
         if (state.isPlaying) {
-            IconButton(onClick = { viewModel.onEvent(AudioPlayerEvent.StopClicked) }) {
-                Icon(Icons.Filled.Close, contentDescription = "Stop", Modifier.size(64.dp))
+            IconButton(onClick = { viewModel.onEvent(AudioPlayerEvent.PauseClicked) }) {
+                Icon(Icons.Filled.Pause, contentDescription = "Pause", Modifier.size(64.dp))
             }
         } else {
             IconButton(onClick = { viewModel.onEvent(AudioPlayerEvent.PlayClicked) })
             {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Play", Modifier.size(512.dp))
+                Icon(Icons.Default.PlayArrow, contentDescription = "Play", Modifier.size(64.dp))
             }
         }
         Text(
