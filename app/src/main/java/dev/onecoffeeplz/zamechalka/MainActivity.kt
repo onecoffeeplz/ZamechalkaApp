@@ -19,7 +19,6 @@ import dev.onecoffeeplz.zamechalka.navigation.TOP_LEVEL_ROUTES
 import dev.onecoffeeplz.zamechalka.navigation.TopLevelRoute
 import dev.onecoffeeplz.zamechalka.presentation.ui.components.ZamechalkaTopBar
 import dev.onecoffeeplz.zamechalka.presentation.ui.theme.ZamechalkaTheme
-import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

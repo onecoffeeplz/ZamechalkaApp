@@ -44,7 +44,9 @@ class NoteDetailsViewModel(
             is PlayClicked -> {
                 if (!_state.value.isPlaying) {
                     if (!_state.value.isPrepared) {
-                        viewModelScope.launch { _effects.emit(PreparePlayer(_state.value.filePath)) }
+                        viewModelScope.launch {
+                            _effects.emit(PreparePlayer(_state.value.filePath))
+                        }
                     } else {
                         viewModelScope.launch { _effects.emit(PlayAudio) }
                         _state.update { it.copy(isPlaying = true) }
@@ -70,6 +72,7 @@ class NoteDetailsViewModel(
                     )
                 }
                 cancelUpdateListenProgress()
+                viewModelScope.launch { _effects.emit(ReleasePlayer) }
             }
 
             is Completed -> {

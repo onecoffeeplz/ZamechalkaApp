@@ -40,7 +40,7 @@ class AudioPlayerRepositoryImpl(private var mediaPlayer: MediaPlayer) : AudioPla
     }
 
     override fun release(): Result<Unit> = runCatching {
-        mediaPlayer.release()
+        mediaPlayer.reset()
     }
 
     override fun currentPosition(): Long? {
