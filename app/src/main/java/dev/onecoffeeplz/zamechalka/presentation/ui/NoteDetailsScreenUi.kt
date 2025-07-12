@@ -20,39 +20,37 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.onecoffeeplz.zamechalka.R
 import dev.onecoffeeplz.zamechalka.domain.model.Note
 import dev.onecoffeeplz.zamechalka.presentation.event.AudioPlayerEvent
 import dev.onecoffeeplz.zamechalka.presentation.ui.components.ErrorView
 import dev.onecoffeeplz.zamechalka.presentation.viewmodel.NoteDetailsViewModel
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NoteDetailsScreen(note: Note,
-                      viewModel: NoteDetailsViewModel = koinViewModel(key = note.path, parameters = {
-                          parametersOf(note.path)
-                      })
+fun NoteDetailsScreenUi(
+    note: Note,
+    viewModel: NoteDetailsViewModel = koinViewModel(),
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(note) {
         viewModel.effects.collect { effect ->
             viewModel.handleEffect(effect)
         }
     }
 
-    DisposableEffect(note.path) {
+    DisposableEffect(note) {
         onDispose {
             viewModel.onEvent(AudioPlayerEvent.StopAndRelease)
         }
@@ -136,5 +134,5 @@ fun NoteDetailsScreenPreview() {
         tags = "",
         createdAt = 1751440432674,
     )
-    NoteDetailsScreen(previewNote)
+    NoteDetailsScreenUi(previewNote)
 }

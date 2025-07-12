@@ -50,7 +50,6 @@ class NoteDetailsViewModel(
                         _state.update { it.copy(isPlaying = true) }
                         updateListenProgress()
                     }
-
                 }
             }
 

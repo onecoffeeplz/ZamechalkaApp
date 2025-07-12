@@ -12,7 +12,7 @@ import dev.onecoffeeplz.zamechalka.R
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SettingsScreen() {
+fun SettingsScreenUi() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth(),

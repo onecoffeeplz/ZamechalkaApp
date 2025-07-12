@@ -43,7 +43,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CreateNoteScreen(viewModel: CreateNoteViewModel = koinViewModel()) {
+fun CreateNoteScreenUi(viewModel: CreateNoteViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
 
     val audioPermissionState = rememberPermissionState(android.Manifest.permission.RECORD_AUDIO)

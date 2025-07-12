@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.onecoffeeplz.zamechalka.domain.model.Note
 import dev.onecoffeeplz.zamechalka.presentation.event.NotesListEvent
-import dev.onecoffeeplz.zamechalka.presentation.navigation.TopLevelRoute
+import dev.onecoffeeplz.zamechalka.navigation.TopLevelRoute
 import dev.onecoffeeplz.zamechalka.presentation.ui.components.EmptyView
 import dev.onecoffeeplz.zamechalka.presentation.ui.components.ErrorView
 import dev.onecoffeeplz.zamechalka.presentation.ui.components.LoadingProgressBar
@@ -18,7 +18,7 @@ import timber.log.Timber
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NotesListScreen(
+fun NotesListScreenUi(
     currentRoute: Any,
     viewModel: NotesListViewModel = koinViewModel(),
     onNoteClick: (Note) -> Unit,
@@ -26,7 +26,7 @@ fun NotesListScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(currentRoute) {
-        if (currentRoute == TopLevelRoute.NotesList) {
+        if (currentRoute == TopLevelRoute.NotesListScreen) {
             viewModel.onEvent(NotesListEvent.LoadData)
         }
     }
