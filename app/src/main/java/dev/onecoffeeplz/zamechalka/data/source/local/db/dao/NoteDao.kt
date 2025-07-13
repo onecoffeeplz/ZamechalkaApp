@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun createNote(note: NoteEntity)
+    suspend fun createNote(note: NoteEntity): Long
 
     @Update
-    suspend fun updateNote(note: NoteEntity)
+    suspend fun updateNote(note: NoteEntity): Int
 
     @Delete
-    suspend fun deleteNote(note: NoteEntity)
+    suspend fun deleteNote(note: NoteEntity): Int
 
     @Query("SELECT * FROM notes ORDER BY createdAt DESC")
     fun getNotes(): Flow<List<NoteEntity>>

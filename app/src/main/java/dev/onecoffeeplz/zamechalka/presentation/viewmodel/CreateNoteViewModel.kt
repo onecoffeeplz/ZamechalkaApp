@@ -2,8 +2,11 @@ package dev.onecoffeeplz.zamechalka.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.onecoffeeplz.zamechalka.domain.usecase.StartRecordingUseCase
-import dev.onecoffeeplz.zamechalka.domain.usecase.StopRecordingUseCase
+import dev.onecoffeeplz.zamechalka.domain.model.Note
+import dev.onecoffeeplz.zamechalka.domain.usecase.view.CreateNoteUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.recording.DeleteRecordingUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.recording.StartRecordingUseCase
+import dev.onecoffeeplz.zamechalka.domain.usecase.recording.StopRecordingUseCase
 import dev.onecoffeeplz.zamechalka.presentation.event.CreateNoteEvent
 import dev.onecoffeeplz.zamechalka.presentation.state.CreateNoteState
 import kotlinx.coroutines.Job
@@ -16,7 +19,9 @@ import kotlinx.coroutines.launch
 
 class CreateNoteViewModel(
     private val startRecordingUseCase: StartRecordingUseCase,
-    private val stopRecordingUseCase: StopRecordingUseCase
+    private val stopRecordingUseCase: StopRecordingUseCase,
+    private val createNoteUseCase: CreateNoteUseCase,
+    private val deleteRecordingUseCase: DeleteRecordingUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(CreateNoteState())
     val state: StateFlow<CreateNoteState> = _state.asStateFlow()
@@ -26,22 +31,44 @@ class CreateNoteViewModel(
 
     fun onEvent(event: CreateNoteEvent) {
         when (event) {
+            is CreateNoteEvent.Idle -> initialScreenState()
             is CreateNoteEvent.StartRecording -> startRecording()
             is CreateNoteEvent.StopRecording -> stopRecording()
-            is CreateNoteEvent.SaveRecording -> saveRecording()
-            is CreateNoteEvent.SaveNote -> saveNote()
+            is CreateNoteEvent.SaveRecording -> saveRecording(
+                event.name,
+                event.path,
+                event.duration
+            )
+
+            is CreateNoteEvent.DeleteRecording -> deleteRecording(event.path)
+        }
+    }
+
+    private fun initialScreenState() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRecording = false,
+                recordingFilePath = null,
+                error = null,
+                recordWasSaved = false,
+                audioWasDeleted = false
+            )
         }
     }
 
     private fun startRecording() = viewModelScope.launch {
-        val result = startRecordingUseCase()
+        val result = startRecordingUseCase(viewModelScope)
         recordingStartTime = System.currentTimeMillis()
         updateRecordingTimeProgress()
         _state.update {
             if (result.isSuccess) {
-                it.copy(isRecording = true, recordingFilePath=null, error = null)
+                it.copy(isRecording = true, recordingFilePath = null, error = null)
             } else {
-                it.copy(isRecording = false, recordingFilePath=null, error = result.exceptionOrNull()?.message)
+                it.copy(
+                    isRecording = false,
+                    recordingFilePath = null,
+                    error = result.exceptionOrNull()?.message
+                )
             }
         }
     }
@@ -63,9 +90,35 @@ class CreateNoteViewModel(
         }
     }
 
-    private fun saveRecording() {}
+    private fun saveRecording(name: String, path: String, duration: Long) =
+        viewModelScope.launch {
+            val result = createNoteUseCase(
+                Note(
+                    name = name,
+                    path = path,
+                    duration = duration,
+                    createdAt = System.currentTimeMillis(),
+                )
+            )
+            _state.update {
+                if (result.isSuccess) {
+                    it.copy(recordWasSaved = true)
+                } else {
+                    it.copy(error = result.exceptionOrNull()?.message)
+                }
+            }
+        }
 
-    private fun saveNote() {}
+    private fun deleteRecording(path: String) = viewModelScope.launch {
+        val result = deleteRecordingUseCase(path)
+        _state.update {
+            if (result.isSuccess) {
+                it.copy(audioWasDeleted = true)
+            } else {
+                it.copy(error = result.exceptionOrNull()?.message)
+            }
+        }
+    }
 
     private fun updateRecordingTimeProgress() {
         timerJob?.cancel()
@@ -84,6 +137,6 @@ class CreateNoteViewModel(
     }
 
     companion object {
-        private const val DURATION_UPDATE_TIME = 1000L
+        private const val DURATION_UPDATE_TIME = 1_000L
     }
 }

@@ -1,11 +1,11 @@
 package dev.onecoffeeplz.zamechalka.di
 
 import androidx.room.Room
-import dev.onecoffeeplz.zamechalka.data.repository.AudioRepositoryImpl
+import dev.onecoffeeplz.zamechalka.data.repository.AudioRecordRecordRepositoryImpl
 import dev.onecoffeeplz.zamechalka.data.repository.NoteRepositoryImpl
 import dev.onecoffeeplz.zamechalka.data.source.local.audio.AudioRecordFactory
 import dev.onecoffeeplz.zamechalka.data.source.local.db.AppDatabase
-import dev.onecoffeeplz.zamechalka.domain.repository.AudioRepository
+import dev.onecoffeeplz.zamechalka.domain.repository.AudioRecordRepository
 import dev.onecoffeeplz.zamechalka.domain.repository.NoteRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.bind
@@ -22,9 +22,10 @@ val dataModule = module {
             "zamechalka_app.db"
         ).build()
     }
+    single { get<AppDatabase>().noteDao() }
 
     single { AudioRecordFactory() }
-    singleOf(::AudioRepositoryImpl) { bind<AudioRepository>() }
+    singleOf(::AudioRecordRecordRepositoryImpl) { bind<AudioRecordRepository>() }
 
     factoryOf(::NoteRepositoryImpl) { bind<NoteRepository>() }
 

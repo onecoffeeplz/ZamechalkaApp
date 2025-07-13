@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_recording">Начать запись</string>
+    <string name="stop">Остановить запись</string>
+    <string name="cancel">Отмена</string>
+    <string name="enter_note_name">Введите имя заметки…</string>
+    <string name="grant_permission">Предоставить разрешение</string>
+    <string name="audio_recording_permission_is_required">Требуется разрешение на доступ к микрофону!</string>
+    <string name="note_was_saved_in_db">Заметка успешно сохранена!</string>
+    <string name="audio_was_deleted">Аудиофайл удален!</string>
+    <string name="save_note">Сохранить заметку</string>
+    <string name="recording_with_duration">Идет запись… Продолжительность: %1$s</string>
+    <string name="duration">Длительность: %1$s</string>
+    <string name="created">Дата создания: %1$s</string>
+    <string name="recorded_file">Файл записан: %1$s</string>
+    <string name="error">Ошибка: %1$s</string>
+    <string name="notes_list">Заметки</string>
+    <string name="note_details">Детали заметки</string>
+    <string name="create_note">Новая заметка</string>
+    <string name="settings">Настройки</string>
+    <string name="no_notes_found">Заметок нет</string>
+    <string name="create">Создать</string>
+</resources>
