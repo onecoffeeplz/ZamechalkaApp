@@ -20,4 +20,5 @@
     <string name="settings">Настройки</string>
     <string name="no_notes_found">Заметок нет</string>
     <string name="create">Создать</string>
+    <string name="delete_note">Удалить заметку</string>
 </resources>
