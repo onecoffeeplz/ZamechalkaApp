@@ -21,4 +21,6 @@
     <string name="no_notes_found">Заметок нет</string>
     <string name="create">Создать</string>
     <string name="delete_note">Удалить заметку</string>
+    <string name="search">Поиск</string>
+    <string name="clear">Очистить</string>
 </resources>
