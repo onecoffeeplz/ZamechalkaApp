@@ -13,7 +13,8 @@
     <string name="duration">Duration: %1$s</string>
     <string name="created">Created: %1$s</string>
     <string name="recorded_file">Recorded file: %1$s</string>
-    <string name="error">Error: %1$s</string>
+    <string name="error">Error</string>
+    <string name="error_with_description">Error: %1$s</string>
     <string name="notes_list">Notes List</string>
     <string name="note_details">Note Details</string>
     <string name="create_note">Create Note</string>

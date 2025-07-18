@@ -1,18 +1,25 @@
 package dev.onecoffeeplz.zamechalka.presentation.ui
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -83,19 +91,40 @@ fun CreateNoteScreenUi(viewModel: CreateNoteViewModel = koinViewModel()) {
                     Text(stringResource(R.string.start_recording))
                 }
             } else {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Text(
-                        stringResource(R.string.audio_recording_permission_is_required),
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = { audioPermissionState.launchPermissionRequest() }) {
-                        Text(stringResource(R.string.grant_permission))
+                    OutlinedCard(
+                        modifier = Modifier
+                            .wrapContentSize(),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                        border = BorderStroke(
+                            0.25.dp,
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(16.dp),
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.img_need_access),
+                                contentDescription = stringResource(R.string.audio_recording_permission_is_required),
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = stringResource(R.string.audio_recording_permission_is_required),
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.titleSmall,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(8.dp),
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Button(onClick = { audioPermissionState.launchPermissionRequest() }) {
+                                Text(stringResource(R.string.grant_permission))
+                            }
+                        }
                     }
                 }
             }
