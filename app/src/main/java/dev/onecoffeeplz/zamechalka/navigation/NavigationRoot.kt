@@ -1,5 +1,6 @@
 package dev.onecoffeeplz.zamechalka.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -19,6 +20,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun NavigationRoot(
     topLevelBackStack: NavBackStack,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier,
 ) {
     NavDisplay(
@@ -59,7 +61,9 @@ fun NavigationRoot(
                     NavEntry(
                         key = key,
                     ) {
-                        CreateNoteScreenUi()
+                        CreateNoteScreenUi(
+                            snackbarHostState = snackbarHostState,
+                        )
                     }
 
                 }

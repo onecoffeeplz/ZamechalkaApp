@@ -48,6 +48,7 @@ class CreateNoteViewModel(
         _state.update {
             it.copy(
                 isRecording = false,
+                recordingDuration = 0L,
                 recordingFilePath = null,
                 error = null,
                 recordWasSaved = false,

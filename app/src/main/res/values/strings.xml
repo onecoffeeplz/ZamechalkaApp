@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Zamechalka</string>
     <string name="start_recording">Start Recording</string>
+    <string name="push_to_start_recording">Push to start recording</string>
     <string name="stop">Stop</string>
     <string name="cancel">Cancel</string>
     <string name="enter_note_name">Enter note name…</string>
@@ -9,6 +10,7 @@
     <string name="note_was_saved_in_db">Note was saved in DB!</string>
     <string name="audio_was_deleted">Audio file was deleted!</string>
     <string name="save_note">Save Note</string>
+    <string name="recording">Recording…</string>
     <string name="recording_with_duration">Recording… Duration: %1$s</string>
     <string name="duration">Duration: %1$s</string>
     <string name="created">Created: %1$s</string>
