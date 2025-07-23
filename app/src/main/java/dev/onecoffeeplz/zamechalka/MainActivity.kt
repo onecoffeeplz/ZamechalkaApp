@@ -10,7 +10,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -27,6 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ZamechalkaTheme {
                 val topLevelBackStack = rememberNavBackStack(TopLevelRoute.NotesListScreen)
+                val snackbarHostState = remember { SnackbarHostState() }
                 Scaffold(
                     topBar = { ZamechalkaTopBar() },
                     bottomBar = {
@@ -52,10 +56,12 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
-                    }
+                    },
+                    snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 ) { innerPadding ->
                     NavigationRoot(
                         topLevelBackStack = topLevelBackStack,
+                        snackbarHostState = snackbarHostState,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)

@@ -1,8 +1,9 @@
 package dev.onecoffeeplz.zamechalka.presentation.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,11 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -58,75 +60,84 @@ fun NoteItem(note: Note, onClick: () -> Unit, onDelete: (Note) -> Unit) {
         positionalThreshold = { thresholdPx }
     )
 
-    SwipeToDismissBox(
-        state = swipeToDismissBoxState,
-        modifier = Modifier.fillMaxSize(),
-        backgroundContent = @Composable {
-            when (swipeToDismissBoxState.dismissDirection) {
-                SwipeToDismissBoxValue.EndToStart -> {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Remove item",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .width(72.dp)
-                            .background(MaterialTheme.colorScheme.error)
-                            .wrapContentSize(Alignment.CenterEnd)
-                            .padding(12.dp),
-                        tint = MaterialTheme.colorScheme.onError
-                    )
-                }
-
-                else -> {}
-            }
-        }
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .fillMaxWidth()
     ) {
-        ListItem(
-            headlineContent = {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(onClick = onClick)
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = note.name,
+        SwipeToDismissBox(
+            state = swipeToDismissBoxState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            backgroundContent = @Composable {
+                when (swipeToDismissBoxState.dismissDirection) {
+                    SwipeToDismissBoxValue.EndToStart -> {
+                        Box(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable(onClick = onClick),
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            style = MaterialTheme.typography.headlineSmall,
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Row {
-                            Text(
-                                text = stringResource(
-                                    R.string.duration,
-                                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(
-                                        note.duration
-                                    )
-                                ),
-                                color = MaterialTheme.colorScheme.secondary,
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = stringResource(
-                                    R.string.created,
-                                    SimpleDateFormat("dd.MM.y", Locale.getDefault()).format(
-                                        note.createdAt
-                                    )
-                                ),
-                                color = MaterialTheme.colorScheme.secondary,
-                                style = MaterialTheme.typography.labelMedium,
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.tertiary),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = stringResource(R.string.delete_note),
+                                tint = MaterialTheme.colorScheme.onTertiary,
+                                modifier = Modifier
+                                    .padding(end = 24.dp)
                             )
                         }
                     }
+
+                    else -> {}
                 }
             }
-        )
+        ) {
+            Card(
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
+                border = BorderStroke(0.25.dp, MaterialTheme.colorScheme.onPrimaryContainer),
+                modifier = Modifier
+                    .clickable(onClick = onClick)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
+                Text(
+                    text = note.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    style = MaterialTheme.typography.headlineSmall,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row {
+                    Text(
+                        text = stringResource(
+                            R.string.duration,
+                            SimpleDateFormat("mm:ss", Locale.getDefault()).format(
+                                note.duration
+                            )
+                        ),
+                        modifier = Modifier
+                            .padding(start = 8.dp, bottom = 8.dp),
+                        color = MaterialTheme.colorScheme.outline,
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = stringResource(
+                            R.string.created,
+                            SimpleDateFormat("dd.MM.y", Locale.getDefault()).format(
+                                note.createdAt
+                            )
+                        ),
+                        color = MaterialTheme.colorScheme.outline,
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                }
+            }
+        }
     }
 }
 

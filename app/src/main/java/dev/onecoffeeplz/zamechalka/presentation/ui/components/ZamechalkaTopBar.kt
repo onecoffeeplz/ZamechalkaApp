@@ -20,13 +20,13 @@ fun ZamechalkaTopBar() {
             Text(
                 stringResource(R.string.app_name),
                 style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onPrimary,
             )
         },
         modifier = Modifier
             .fillMaxWidth(),
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     )

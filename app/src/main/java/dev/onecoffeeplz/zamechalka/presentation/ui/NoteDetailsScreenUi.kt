@@ -1,18 +1,21 @@
 package dev.onecoffeeplz.zamechalka.presentation.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +26,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.onecoffeeplz.zamechalka.R
 import dev.onecoffeeplz.zamechalka.domain.model.Note
 import dev.onecoffeeplz.zamechalka.presentation.event.AudioPlayerEvent
+import dev.onecoffeeplz.zamechalka.presentation.state.AudioPlayerState
 import dev.onecoffeeplz.zamechalka.presentation.ui.components.ErrorView
 import dev.onecoffeeplz.zamechalka.presentation.viewmodel.NoteDetailsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -55,6 +63,28 @@ fun NoteDetailsScreenUi(
             viewModel.onEvent(AudioPlayerEvent.StopAndRelease)
         }
     }
+
+    NoteDetailsView(
+        note,
+        state,
+        onPlayClick = { viewModel.onEvent(AudioPlayerEvent.PlayClicked) },
+        onPauseClick = { viewModel.onEvent(AudioPlayerEvent.PauseClicked) },
+    )
+
+    state.error?.let {
+        ErrorView(message = it)
+    }
+}
+
+@Composable
+private fun NoteDetailsView(
+    note: Note,
+    state: AudioPlayerState,
+    onPlayClick: () -> Unit,
+    onPauseClick: () -> Unit,
+) {
+    
+    val btnSize = 96.dp
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -95,16 +125,55 @@ fun NoteDetailsScreenUi(
         }
 
         Spacer(Modifier.height(16.dp))
+
         if (state.isPlaying) {
-            IconButton(onClick = { viewModel.onEvent(AudioPlayerEvent.PauseClicked) }) {
-                Icon(Icons.Filled.Pause, contentDescription = "Pause", Modifier.size(64.dp))
+            Button(
+                onClick = onPauseClick,
+                modifier = Modifier
+                    .size(btnSize)
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = CircleShape,
+                        clip = false,
+                    ),
+                shape = CircleShape,
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.btn_pause),
+                    contentDescription = stringResource(R.string.pause),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop,
+                )
             }
         } else {
-            IconButton(onClick = { viewModel.onEvent(AudioPlayerEvent.PlayClicked) })
-            {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Play", Modifier.size(64.dp))
+            Button(
+                onClick = onPlayClick,
+                modifier = Modifier
+                    .size(btnSize)
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = CircleShape,
+                        clip = false,
+                    ),
+                shape = CircleShape,
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.btn_play),
+                    contentDescription = stringResource(R.string.play),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop,
+                )
             }
         }
+
+        Spacer(Modifier.height(16.dp))
+
         Text(
             text = stringResource(
                 R.string.duration,
@@ -115,10 +184,6 @@ fun NoteDetailsScreenUi(
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.labelMedium,
         )
-    }
-
-    state.error?.let {
-        ErrorView(message = it)
     }
 }
 
@@ -134,5 +199,5 @@ fun NoteDetailsScreenPreview() {
         tags = "",
         createdAt = 1751440432674,
     )
-    NoteDetailsScreenUi(previewNote)
+    NoteDetailsView(previewNote, AudioPlayerState(filePath = ""), {}, {})
 }
