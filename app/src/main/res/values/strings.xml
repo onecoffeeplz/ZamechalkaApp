@@ -26,4 +26,6 @@
     <string name="delete_note">Delete note</string>
     <string name="search">Search</string>
     <string name="clear">Clear</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
 </resources>

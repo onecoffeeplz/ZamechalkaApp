@@ -27,4 +27,6 @@
     <string name="delete_note">Удалить заметку</string>
     <string name="search">Поиск</string>
     <string name="clear">Очистить</string>
+    <string name="pause">Пауза</string>
+    <string name="play">Прослушать</string>
 </resources>
